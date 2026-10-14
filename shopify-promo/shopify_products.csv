@@ -1,0 +1,31 @@
+Handle,Title,Body (HTML),Vendor,Type,Tags,Published,Option1 Name,Option1 Value,Variant SKU,Variant Inventory Tracker,Variant Inventory Policy,Variant Fulfillment Service,Variant Price,Variant Requires Shipping,Variant Taxable,Status
+island-hopping-joiners,Island Hopping Joiners,<p>4-6 hours of island hopping with sightseeing across multiple islands</p>,Boracay Activities,Main Activity,"tier:main,promo-eligible,price-type:joiner",TRUE,Variation,Standard,ISLAND-HOPPING-JOINERS-STANDARD,,continue,manual,900,FALSE,FALSE,active
+party-yacht-experience,Party Yacht Experience,,Boracay Activities,Main Activity,"tier:main,promo-eligible,price-type:joiner",TRUE,Variation,Debora,PARTY-YACHT-EXPERIENCE-DEBORA,,continue,manual,1500,FALSE,FALSE,active
+party-yacht-experience,,,,,,,Variation,Diamond Cruise,PARTY-YACHT-EXPERIENCE-DIAMOND-CRUISE,,continue,manual,1600,FALSE,FALSE,
+party-yacht-experience,,,,,,,Variation,Sally Yacht,PARTY-YACHT-EXPERIENCE-SALLY-YACHT,,continue,manual,1800,FALSE,FALSE,
+party-yacht-experience,,,,,,,Variation,Sundancer,PARTY-YACHT-EXPERIENCE-SUNDANCER,,continue,manual,1500,FALSE,FALSE,
+party-yacht-experience,,,,,,,Variation,Red Whale,PARTY-YACHT-EXPERIENCE-RED-WHALE,,continue,manual,3000,FALSE,FALSE,
+parasailing,Parasailing,<p>Enjoy parasailing with 3-person capacity</p>,Boracay Activities,Main Activity,"tier:main,promo-eligible,price-type:per_booking",TRUE,Variation,Solo,PARASAILING-SOLO,,continue,manual,2500,FALSE,FALSE,active
+parasailing,,,,,,,Variation,Duo,PARASAILING-DUO,,continue,manual,3600,FALSE,FALSE,
+parasailing,,,,,,,Variation,Trio,PARASAILING-TRIO,,continue,manual,5400,FALSE,FALSE,
+jetski-ride,Jetski Ride,<p>Up to 2 pax per jetski</p>,Boracay Activities,Main Activity,"tier:main,promo-eligible,price-type:per_booking",TRUE,Variation,15 minutes,JETSKI-RIDE-15-MINUTES,,continue,manual,2500,FALSE,FALSE,active
+jetski-ride,,,,,,,Variation,30 minutes,JETSKI-RIDE-30-MINUTES,,continue,manual,3800,FALSE,FALSE,
+atv-mainland-package,ATV Mainland Package,<p>ATV ride followed by a zipline adventure</p>,Boracay Activities,Main Activity,"tier:main,promo-eligible,price-type:per_pax",TRUE,Variation,Mega Paraw ATV,ATV-MAINLAND-PACKAGE-MEGA-PARAW-ATV,,continue,manual,1500,FALSE,FALSE,active
+buggy-car-ride,Buggy Car Ride,<p>ATV ride followed by a zipline adventure</p>,Boracay Activities,Main Activity,"tier:main,promo-eligible,price-type:per_pax",TRUE,Variation,Mega Paraw Buggy,BUGGY-CAR-RIDE-MEGA-PARAW-BUGGY,,continue,manual,1800,FALSE,FALSE,active
+atv-adventure-by-zetro,ATV Adventure by Zetro,<p>ATV only</p>,Boracay Activities,Main Activity,"tier:main,promo-eligible,price-type:per_pax",TRUE,Variation,Zetro ATV (Boracay Newcoast),ATV-ADVENTURE-BY-ZETRO-ZETRO-ATV-BORACAY-NEWCOAST,,continue,manual,1800,FALSE,FALSE,active
+atv-adventure-by-zetro,,,,,,,Variation,Zetro ATV (Trail),ATV-ADVENTURE-BY-ZETRO-ZETRO-ATV-TRAIL,,continue,manual,1200,FALSE,FALSE,
+helmet-diving,Helmet Diving,<p>Dive for 15 minutes with photos and videos included</p>,Boracay Activities,Secondary Activity,"tier:secondary,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,HELMET-DIVING-STANDARD,,continue,manual,1500,FALSE,FALSE,active
+party-boat,Party Boat,,Boracay Activities,Secondary Activity,"tier:secondary,promo-eligible,price-type:joiner",TRUE,Variation,Debora,PARTY-BOAT-DEBORA,,continue,manual,1000,FALSE,FALSE,active
+crystal-kayak-pictorial,Crystal Kayak Pictorial,,Boracay Activities,Secondary Activity,"tier:secondary,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,CRYSTAL-KAYAK-PICTORIAL-STANDARD,,continue,manual,300,FALSE,FALSE,active
+mermaid-tail-rental,Mermaid Tail Rental,,Boracay Activities,Secondary Activity,"tier:secondary,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,MERMAID-TAIL-RENTAL-STANDARD,,continue,manual,300,FALSE,FALSE,active
+paraw-sailing,Paraw Sailing,,Boracay Activities,Secondary Activity,"tier:secondary,promo-eligible,price-type:joiner",TRUE,Variation,Standard,PARAW-SAILING-STANDARD,,continue,manual,900,FALSE,FALSE,active
+freediving,Freediving,,Boracay Activities,Secondary Activity,"tier:secondary,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,FREEDIVING-STANDARD,,continue,manual,3000,FALSE,FALSE,active
+scuba-diving,Scuba Diving,<p>With photos and videos</p>,Boracay Activities,Secondary Activity,"tier:secondary,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,SCUBA-DIVING-STANDARD,,continue,manual,2500,FALSE,FALSE,active
+paddle-boarding-rental,Paddle Boarding Rental,,Boracay Activities,Secondary Activity,"tier:secondary,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,PADDLE-BOARDING-RENTAL-STANDARD,,continue,manual,600,FALSE,FALSE,active
+banana-boat-ride,Banana Boat Ride,<p>Minimum 6 participants. Maximum 20 per session.</p>,Boracay Activities,Secondary - Group Activity,"tier:group,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,BANANA-BOAT-RIDE-STANDARD,,continue,manual,450,FALSE,FALSE,active
+hurricane,Hurricane,<p>Minimum 4 participants. Maximum 6 per session.</p>,Boracay Activities,Secondary - Group Activity,"tier:group,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,HURRICANE-STANDARD,,continue,manual,750,FALSE,FALSE,active
+ufo-ride,UFO Ride,<p>Minimum 4 participants. Maximum 6 per session.</p>,Boracay Activities,Secondary - Group Activity,"tier:group,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,UFO-RIDE-STANDARD,,continue,manual,700,FALSE,FALSE,active
+bandwagon,Bandwagon,<p>Minimum 4 participants. Maximum 6 per session.</p>,Boracay Activities,Secondary - Group Activity,"tier:group,promo-eligible,price-type:per_pax",TRUE,Variation,Standard,BANDWAGON-STANDARD,,continue,manual,750,FALSE,FALSE,active
+gladiator-boat,Gladiator Boat,<p>Minimum 6 participants. Maximum 10 per session.</p>,Boracay Activities,Secondary - Group Activity,"tier:group,promo-eligible,price-type:per_pax",TRUE,Variation,Milkys,GLADIATOR-BOAT-MILKYS,,continue,manual,750,FALSE,FALSE,active
+land-tour,Land Tour,<p>Minimum 5 participants.</p>,Boracay Activities,Secondary - Group Activity,"tier:group,promo-eligible,price-type:per_pax",TRUE,Variation,E-Trike,LAND-TOUR-E-TRIKE,,continue,manual,3000,FALSE,FALSE,active
+land-tour,,,,,,,Variation,Aircon Van,LAND-TOUR-AIRCON-VAN,,continue,manual,5000,FALSE,FALSE,
