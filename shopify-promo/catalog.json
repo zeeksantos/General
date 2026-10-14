@@ -1,0 +1,377 @@
+{
+  "Island Hopping Joiners": {
+    "tier": "main",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "4 hours",
+        "capacity": "up to 50 pax",
+        "min_pax": 1,
+        "price": 900,
+        "price_type": "joiner",
+        "notes": "4-6 hours of island hopping with sightseeing across multiple islands"
+      }
+    ]
+  },
+  "Party Yacht Experience": {
+    "tier": "main",
+    "variants": [
+      {
+        "option": "Debora",
+        "duration": "2 hours",
+        "capacity": "70-80 pax",
+        "min_pax": 1,
+        "price": 1500,
+        "price_type": "joiner",
+        "notes": ""
+      },
+      {
+        "option": "Diamond Cruise",
+        "duration": "2 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 1600,
+        "price_type": "joiner",
+        "notes": ""
+      },
+      {
+        "option": "Sally Yacht",
+        "duration": "3 hours",
+        "capacity": "50 pax",
+        "min_pax": 1,
+        "price": 1800,
+        "price_type": "joiner",
+        "notes": ""
+      },
+      {
+        "option": "Sundancer",
+        "duration": "3 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 1500,
+        "price_type": "joiner",
+        "notes": ""
+      },
+      {
+        "option": "Red Whale",
+        "duration": "4 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 3000,
+        "price_type": "joiner",
+        "notes": ""
+      }
+    ]
+  },
+  "Parasailing": {
+    "tier": "main",
+    "variants": [
+      {
+        "option": "Solo",
+        "duration": "10 minutes",
+        "capacity": "1 pax",
+        "min_pax": 1,
+        "price": 2500,
+        "price_type": "per_booking",
+        "notes": "Enjoy parasailing with 3-person capacity"
+      },
+      {
+        "option": "Duo",
+        "duration": "10 minutes",
+        "capacity": "2 pax",
+        "min_pax": 1,
+        "price": 3600,
+        "price_type": "per_booking",
+        "notes": "Enjoy parasailing with 3-person capacity"
+      },
+      {
+        "option": "Trio",
+        "duration": "10 minutes",
+        "capacity": "3 pax",
+        "min_pax": 1,
+        "price": 5400,
+        "price_type": "per_booking",
+        "notes": "Enjoy parasailing with 3-person capacity"
+      }
+    ]
+  },
+  "Jetski Ride": {
+    "tier": "main",
+    "variants": [
+      {
+        "option": "15 minutes",
+        "duration": "15 minutes",
+        "capacity": "up to 2 pax",
+        "min_pax": 1,
+        "price": 2500,
+        "price_type": "per_booking",
+        "notes": "Up to 2 pax per jetski"
+      },
+      {
+        "option": "30 minutes",
+        "duration": "30 minutes",
+        "capacity": "2-4 pax",
+        "min_pax": 1,
+        "price": 3800,
+        "price_type": "per_booking",
+        "notes": "Up to 4 pax, 2 pax per ride. Max 2 passengers per jetski at one time; the 4-pax package is subject to the operator's ride-sharing arrangement."
+      }
+    ]
+  },
+  "ATV Mainland Package": {
+    "tier": "main",
+    "variants": [
+      {
+        "option": "Mega Paraw ATV",
+        "duration": "2-3 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 1500,
+        "price_type": "per_pax",
+        "notes": "ATV ride followed by a zipline adventure"
+      }
+    ]
+  },
+  "Buggy Car Ride": {
+    "tier": "main",
+    "variants": [
+      {
+        "option": "Mega Paraw Buggy",
+        "duration": "2-3 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 1800,
+        "price_type": "per_pax",
+        "notes": "ATV ride followed by a zipline adventure"
+      }
+    ]
+  },
+  "ATV Adventure by Zetro": {
+    "tier": "main",
+    "variants": [
+      {
+        "option": "Zetro ATV (Boracay Newcoast)",
+        "duration": "2-3 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 1800,
+        "price_type": "per_pax",
+        "notes": "ATV only"
+      },
+      {
+        "option": "Zetro ATV (Trail)",
+        "duration": "2-3 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 1200,
+        "price_type": "per_pax",
+        "notes": "ATV only"
+      }
+    ]
+  },
+  "Helmet Diving": {
+    "tier": "secondary",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "15 minutes",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 1500,
+        "price_type": "per_pax",
+        "notes": "Dive for 15 minutes with photos and videos included"
+      }
+    ]
+  },
+  "Party Boat": {
+    "tier": "secondary",
+    "variants": [
+      {
+        "option": "Debora",
+        "duration": "2 hours",
+        "capacity": "50 pax",
+        "min_pax": 1,
+        "price": 1000,
+        "price_type": "joiner",
+        "notes": ""
+      }
+    ]
+  },
+  "Crystal Kayak Pictorial": {
+    "tier": "secondary",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "15 minutes",
+        "capacity": "1 pax",
+        "min_pax": 1,
+        "price": 300,
+        "price_type": "per_pax",
+        "notes": ""
+      }
+    ]
+  },
+  "Mermaid Tail Rental": {
+    "tier": "secondary",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "1 hour",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 300,
+        "price_type": "per_pax",
+        "notes": ""
+      }
+    ]
+  },
+  "Paraw Sailing": {
+    "tier": "secondary",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "30 minutes",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 900,
+        "price_type": "joiner",
+        "notes": ""
+      }
+    ]
+  },
+  "Freediving": {
+    "tier": "secondary",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "2 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 3000,
+        "price_type": "per_pax",
+        "notes": ""
+      }
+    ]
+  },
+  "Scuba Diving": {
+    "tier": "secondary",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "2 hours",
+        "capacity": "",
+        "min_pax": 1,
+        "price": 2500,
+        "price_type": "per_pax",
+        "notes": "With photos and videos"
+      }
+    ]
+  },
+  "Paddle Boarding Rental": {
+    "tier": "secondary",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "1 hour",
+        "capacity": "up to 2 pax",
+        "min_pax": 1,
+        "price": 600,
+        "price_type": "per_pax",
+        "notes": ""
+      }
+    ]
+  },
+  "Banana Boat Ride": {
+    "tier": "group",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "15 minutes",
+        "capacity": "up to 20 pax",
+        "min_pax": 6,
+        "price": 450,
+        "price_type": "per_pax",
+        "notes": "Minimum 6 participants. Maximum 20 per session."
+      }
+    ]
+  },
+  "Hurricane": {
+    "tier": "group",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "15 minutes",
+        "capacity": "up to 6 pax",
+        "min_pax": 4,
+        "price": 750,
+        "price_type": "per_pax",
+        "notes": "Minimum 4 participants. Maximum 6 per session."
+      }
+    ]
+  },
+  "UFO Ride": {
+    "tier": "group",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "15 minutes",
+        "capacity": "up to 6 pax",
+        "min_pax": 4,
+        "price": 700,
+        "price_type": "per_pax",
+        "notes": "Minimum 4 participants. Maximum 6 per session."
+      }
+    ]
+  },
+  "Bandwagon": {
+    "tier": "group",
+    "variants": [
+      {
+        "option": "Standard",
+        "duration": "15 minutes",
+        "capacity": "6 pax",
+        "min_pax": 4,
+        "price": 750,
+        "price_type": "per_pax",
+        "notes": "Minimum 4 participants. Maximum 6 per session."
+      }
+    ]
+  },
+  "Gladiator Boat": {
+    "tier": "group",
+    "variants": [
+      {
+        "option": "Milkys",
+        "duration": "15 minutes",
+        "capacity": "up to 10 pax",
+        "min_pax": 6,
+        "price": 750,
+        "price_type": "per_pax",
+        "notes": "Minimum 6 participants. Maximum 10 per session."
+      }
+    ]
+  },
+  "Land Tour": {
+    "tier": "group",
+    "variants": [
+      {
+        "option": "E-Trike",
+        "duration": "3 hours",
+        "capacity": "up to 7 pax",
+        "min_pax": 5,
+        "price": 3000,
+        "price_type": "per_pax",
+        "notes": "Minimum 5 participants."
+      },
+      {
+        "option": "Aircon Van",
+        "duration": "3 hours",
+        "capacity": "up to 10 pax",
+        "min_pax": 5,
+        "price": 5000,
+        "price_type": "per_pax",
+        "notes": "Minimum 5 participants."
+      }
+    ]
+  }
+}
