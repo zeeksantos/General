@@ -1,9 +1,9 @@
 ---
-name: daily-meta-ads-sheet-update
+name: meta-ads-gsheet-update-vistaland-vdo
 description: Updates the Google Sheet "Vistaland Team VDO (Masterfile) 2026" - daily Messages and Ads Spent from the Meta ad account VDO Vantage Ads (ID 1359615401789744), lead and deal counts (Zoom, Viewing, Dump, Warm, Hot, Closed) from Pancake conversation tags, and each month's Overall Summary block. Use this whenever the user asks to update, refresh, sync, fill or backfill the Vistaland / VDO masterfile, its daily ad numbers, lead columns, Pancake tags or monthly summary, or when a scheduled daily run fires for it, even if they don't name the sheet or the tabs.
 ---
 
-# Vistaland VDO Masterfile Update
+# Meta ads & gsheet update - Vistaland VDO
 
 Keep the masterfile current: Messages and Ads Spent from Meta, lead and deal counts from Pancake tags, and a monthly Overall Summary that recalculates from the daily rows.
 
