@@ -12,6 +12,6 @@ export async function resyncAffiliate(formData: FormData) {
   if (!viewer) redirect("/login");
   if (viewer.role !== "admin") redirect("/dashboard");
 
-  const outcome = DEMO_MODE ? "ok" : profileId ? await triggerSync({ profile_id: profileId }) : "failed";
+  const outcome = DEMO_MODE ? "ok" : profileId ? await triggerSync({ profile_id: profileId, source: "manual" }) : "failed";
   redirect(`/admin?synced=${outcome}&who=${encodeURIComponent(profileId)}`);
 }

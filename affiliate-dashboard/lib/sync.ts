@@ -3,7 +3,7 @@ import "server-only";
 export type SyncOutcome = "ok" | "partial" | "throttled" | "failed";
 
 /** Calls the sync Edge Function. Callers MUST authorize first; the body scope is never client-supplied. */
-export async function triggerSync(body: { profile_id?: string; connection_id?: string }): Promise<SyncOutcome> {
+export async function triggerSync(body: { profile_id?: string; connection_id?: string; source?: "manual" }): Promise<SyncOutcome> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/sync`, {
       method: "POST",

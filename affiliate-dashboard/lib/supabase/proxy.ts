@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { DEMO_MODE } from "@/lib/config";
 
-const PUBLIC_PATHS = ["/login", "/signup", "/forgot-password", "/auth", "/privacy", "/terms", "/data-deletion"];
+const PUBLIC_PATHS = ["/api/notify", "/login", "/signup", "/forgot-password", "/auth", "/privacy", "/terms", "/data-deletion"];
 const GUEST_ONLY = ["/login", "/signup", "/forgot-password"];
 
 // Refreshes the Supabase session and gates everything except public paths.

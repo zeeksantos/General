@@ -2,6 +2,8 @@
 // so the demo always looks fresh. Never mixed with real data.
 import type { ConnectionSummaryRow, ProfileRow } from "../admin.ts";
 import { manilaDate, addDays } from "../dates.ts";
+import type { UserRow } from "../admin-users.ts";
+import type { SyncRun } from "../sync-log.ts";
 import type { VideoStat } from "../stats.ts";
 
 export const DEMO_VIEWER_ID = "demo-1";
@@ -12,6 +14,9 @@ export type DemoData = {
   connections: DemoConnection[];
   videos: VideoStat[];
   taps: { profile_id: string; date: string; taps: number }[];
+  users: UserRow[];
+  syncRuns: SyncRun[];
+  invites: { email: string; created_at: string }[];
 };
 
 function mulberry32(seed: number) {
@@ -137,5 +142,40 @@ export function demoData(now: Date = new Date()): DemoData {
   });
 
   videos.sort((x, y) => y.published_at.localeCompare(x.published_at));
-  return { profiles, connections, videos, taps };
+
+  // ---- users (approval queue, a suspended account, one admin)
+  const hoursAgo = (h: number) => new Date(now.getTime() - h * 3_600_000).toISOString();
+  const users: UserRow[] = [
+    ...profiles.map((p, i): UserRow => ({
+      id: p.id, name: p.name, email: p.email, role: i === 0 ? "admin" : "affiliate", status: "active",
+      created_at: hoursAgo(24 * (60 - i * 7)), accounts: connections.filter((c) => c.profile_id === p.id).length,
+    })),
+    { id: "demo-7", name: "Ria Mendoza", email: "ria.mendoza@demo.example", role: "affiliate", status: "pending", created_at: hoursAgo(5), accounts: 0 },
+    { id: "demo-8", name: "Carlo Dizon", email: "carlo.dizon@demo.example", role: "affiliate", status: "pending", created_at: hoursAgo(30), accounts: 0 },
+    { id: "demo-9", name: "Ben Torres", email: "ben.torres@demo.example", role: "affiliate", status: "suspended", created_at: hoursAgo(24 * 40), accounts: 1 },
+  ];
+
+  // ---- sync log: two recent runs per synced connection, with a few realistic problems
+  const syncRuns: SyncRun[] = [];
+  for (const c of connections) {
+    if (c.last_synced_at === null) continue;
+    const owner = profiles.find((p) => p.id === c.profile_id)!;
+    for (const [n, h] of [[0, 4], [1, 28]] as const) {
+      let status = "ok";
+      let warnings: string[] = [];
+      if (c.status === "needs_reconnect") status = n === 0 ? "needs_reconnect" : "ok";
+      else if (c.platform === "instagram") warnings = [`metric ig_reels_video_view_total_time unavailable for 1784140000${(n + 1) * 111111}/insights: (#100) metric not supported for this media`];
+      if (c.id === "demo-conn-3-facebook" && n === 0) { status = "partial"; warnings = ["Ran out of time; the rest continues next run"]; }
+      if (c.id === "demo-conn-2-instagram" && n === 0) { status = "error"; warnings = ["videos upsert failed"]; }
+      syncRuns.push({
+        id: `demo-run-${c.id}-${n}`, started_at: hoursAgo(h), source: n === 0 && c.id.startsWith("demo-conn-1") ? "manual" : "cron",
+        connection_id: c.id, profile_id: c.profile_id, platform: c.platform, status,
+        videos: status === "needs_reconnect" || status === "error" ? 0 : 12 + n, warnings,
+        duration_ms: 1500 + Math.round(rng() * 6000), profile_name: owner.name, account_name: c.account_name,
+      });
+    }
+  }
+  syncRuns.sort((a, b) => b.started_at.localeCompare(a.started_at));
+
+  return { profiles, connections, videos, taps, users, syncRuns, invites: [{ email: "new.creator@demo.example", created_at: hoursAgo(20) }] };
 }

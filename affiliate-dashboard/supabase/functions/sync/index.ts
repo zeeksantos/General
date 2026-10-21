@@ -1,7 +1,8 @@
 // Supabase Edge Function: syncs Facebook/Instagram videos + insights into Postgres.
 // Invoked daily by pg_cron and on demand by the app, both with the `x-sync-secret` header
 // (verified against the Vault secret `sync_secret` via public.check_sync_secret).
-// Body (all optional): { connection_id?: string, profile_id?: string }
+// Body (all optional): { connection_id?: string, profile_id?: string, source?: "manual" }
+// Every connection's result is recorded in public.sync_runs (shown on /admin/sync-log).
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { insightsTolerant, graphGet, MetaError, paginate, ThrottledError } from "./meta.ts";
 import {
@@ -18,9 +19,11 @@ const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SE
 });
 
 type Conn = {
-  id: string; platform: "facebook" | "instagram"; external_account_id: string;
+  id: string; profile_id: string; platform: "facebook" | "instagram"; external_account_id: string;
   token_secret_id: string | null; last_synced_at: string | null;
 };
+const LOG_RETENTION_DAYS = 30;
+const MAX_LOGGED_WARNINGS = 20;
 type VideoRow = {
   external_id: string; caption: string | null; permalink: string | null; thumbnail_url: string | null;
   media_type: string; published_at: string; duration_seconds?: number | null;
@@ -36,8 +39,12 @@ Deno.serve(async (req) => {
   const body = await req.json().catch(() => ({}));
   const deadline = Date.now() + TIME_BUDGET_MS;
 
-  let q = db.from("connections").select("id, platform, external_account_id, token_secret_id, last_synced_at")
-    .eq("status", "active").order("last_synced_at", { ascending: true, nullsFirst: true });
+  const source = body.source === "manual" ? "manual" : "cron";
+
+  // Only accounts that are approved and not suspended are synced.
+  let q = db.from("connections")
+    .select("id, profile_id, platform, external_account_id, token_secret_id, last_synced_at, profiles!inner(status)")
+    .eq("status", "active").eq("profiles.status", "active").order("last_synced_at", { ascending: true, nullsFirst: true });
   if (body.connection_id) q = q.eq("id", body.connection_id);
   if (body.profile_id) q = q.eq("profile_id", body.profile_id);
   const { data: conns, error } = await q;
@@ -45,13 +52,36 @@ Deno.serve(async (req) => {
 
   const results = [];
   for (const conn of (conns ?? []) as Conn[]) {
-    if (Date.now() > deadline) { results.push({ connection_id: conn.id, status: "skipped_time_budget" }); continue; }
+    const started = Date.now();
+    if (started > deadline) {
+      const skipped = { connection_id: conn.id, platform: conn.platform, status: "skipped_time_budget", videos: 0, warnings: [] as string[] };
+      results.push(skipped);
+      await logRun(conn, source, skipped, 0);
+      continue;
+    }
     const r = await syncConnection(conn, deadline);
     results.push(r);
+    await logRun(conn, source, r, Date.now() - started);
     if (r.status === "throttled") break; // Meta limits are app/page wide: stop the whole run
   }
+
+  // Keep the log small: drop rows older than the retention window.
+  await db.from("sync_runs").delete().lt("started_at", new Date(Date.now() - LOG_RETENTION_DAYS * 86_400_000).toISOString());
   return Response.json({ results });
 });
+
+async function logRun(
+  conn: Conn, source: string,
+  r: { status: string; platform?: string; videos: number; warnings: string[] }, durationMs: number,
+) {
+  // A logging failure must never break the sync itself.
+  const { error } = await db.from("sync_runs").insert({
+    source, connection_id: conn.id, profile_id: conn.profile_id, platform: conn.platform, status: r.status,
+    videos: r.videos, warnings: r.warnings.slice(0, MAX_LOGGED_WARNINGS).map((w) => String(w).slice(0, 300)),
+    duration_ms: durationMs,
+  });
+  if (error) console.error("could not log sync run:", error.message);
+}
 
 async function syncConnection(conn: Conn, deadline: number) {
   const warnings: string[] = [];

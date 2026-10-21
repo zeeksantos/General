@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { DEMO_MODE } from "@/lib/config";
-import { createClient } from "@/lib/supabase/server";
+import { getActiveViewer } from "@/lib/viewer";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { graphGet } from "@/lib/meta/graph";
 import { listPages } from "@/lib/meta/oauth";
@@ -14,9 +14,8 @@ const PENDING_COOKIE = "meta_pending_token";
 export async function selectPage(formData: FormData) {
   if (DEMO_MODE) redirect("/dashboard?connect_error=demo");
   const pageId = String(formData.get("page_id") ?? "");
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  const user = await getActiveViewer(); // pending / suspended accounts can't connect anything
+  if (!user) redirect("/dashboard");
 
   const jar = await cookies();
   const pendingId = jar.get(PENDING_COOKIE)?.value;
@@ -88,9 +87,8 @@ export async function selectPage(formData: FormData) {
 export async function disconnect(formData: FormData) {
   if (DEMO_MODE) redirect("/dashboard?connect_error=demo");
   const id = String(formData.get("connection_id") ?? "");
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  const user = await getActiveViewer();
+  if (!user) redirect("/dashboard");
 
   const admin = createAdminClient();
   const { data: conn } = await admin

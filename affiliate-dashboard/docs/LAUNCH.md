@@ -55,3 +55,21 @@ security). Admins are still promoted by hand.
 3. Sign out, sign in with the password, then with the emailed link, then try "Forgot your password?".
 4. Delete the test account from `/settings → Delete my data`.
 5. In the Supabase dashboard check that `public.profiles` has your row (and that it is gone after step 4).
+
+## Controlled sign-up, user management and alerts
+- **Who can sign up** (Admin → Users): *approval required* (default) or *open*. In approval mode a new account can sign in but sees
+  "waiting for approval" until an admin approves it; **invited emails skip approval**. Admins can also suspend, reactivate, make or
+  remove admins, and delete users. You can't suspend/delete yourself or another admin, and there is always at least one admin.
+  Suspension is enforced in the database (a suspended user's data queries return nothing) and their accounts stop syncing.
+- **Needs in Vercel:** `SUPABASE_SERVICE_ROLE_KEY` (the Users page, invitations and approvals use it). Without it these pages error.
+- **Invitations** use Supabase's own invite email, so they need the SMTP setup above to be reliable. If an invitation email fails,
+  the person can still sign up with that address and will skip approval.
+- **Sync log** (Admin → Sync log): every sync of every account for 7 days, with its result and warnings, plus "warnings by kind".
+  After the first real syncs, check it: a metric warning on many videos means Meta changed that metric.
+- **Alert emails** (optional): set `RESEND_API_KEY` and `EMAIL_FROM` in Vercel (create a free Resend account, verify your sending
+  domain). Then (a) approving a user emails them, (b) a user whose connection breaks gets a "please reconnect" email, and (c) admins
+  get a daily summary of sync problems and accounts waiting for approval. The daily job runs at 03:30 Manila
+  (`daily-notify`, calls `/api/notify`; the Vault secret `notify_url` points at the production URL, **update it if the domain
+  changes**). Without Resend nothing is emailed; alerts wait up to 3 days and then expire. The sign-in/confirmation/invite emails
+  are Supabase Auth emails and do not use Resend.
+- The notify job can't reach the site while Vercel's login protection is on, or in demo mode. Turn protection off first.
