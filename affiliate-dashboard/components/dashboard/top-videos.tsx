@@ -28,20 +28,23 @@ function PlatformBadge({ platform }: { platform: VideoStat["platform"] }) {
 }
 
 export function TopVideos({
-  videos, platform, window, sort, keep,
+  videos, platform, window, sort, keep, basePath = "/dashboard", showAffiliate = false, heading = "Top videos",
 }: {
   videos: VideoStat[];
   platform: string;
   window: TopWindow;
   sort: SortKey;
   keep: Record<string, string>; // other query params to preserve (e.g. the KPI period)
+  basePath?: string;
+  showAffiliate?: boolean; // admin leaderboard: show whose video it is
+  heading?: string;
 }) {
   const href = (extra: Record<string, string>) =>
-    `/dashboard?${new URLSearchParams({ ...keep, platform, top: window, sort, ...extra })}`;
+    `${basePath}?${new URLSearchParams({ ...keep, platform, top: window, sort, ...extra })}`;
 
   return (
     <section className="flex flex-col gap-3" aria-labelledby="top-videos-heading">
-      <h2 id="top-videos-heading" className="text-lg font-semibold">Top videos</h2>
+      <h2 id="top-videos-heading" className="text-lg font-semibold">{heading}</h2>
       <div className="flex flex-wrap items-center gap-3">
         <Pills items={PLATFORMS} active={platform} href={(v) => href({ platform: v })} />
         <Pills items={WINDOWS} active={window} href={(v) => href({ top: v })} />
@@ -85,7 +88,10 @@ export function TopVideos({
                           <div className="h-16 w-16 shrink-0 rounded-md bg-muted" aria-hidden />
                         )}
                         <div className="flex min-w-0 max-w-xs flex-col gap-1">
-                          <PlatformBadge platform={v.platform} />
+                          <div className="flex flex-wrap items-center gap-2">
+                            <PlatformBadge platform={v.platform} />
+                            {showAffiliate && <span className="text-xs font-medium">{v.profile_name}</span>}
+                          </div>
                           <span className="line-clamp-2">{why.hook}</span>
                           <details className="text-xs">
                             <summary className="cursor-pointer text-muted-foreground">Why it worked</summary>

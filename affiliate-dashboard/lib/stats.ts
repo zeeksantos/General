@@ -4,6 +4,8 @@ export type Platform = "facebook" | "instagram";
 
 export type VideoStat = {
   id: string;
+  profile_id?: string;   // owner (present on rows from videos_with_latest_metrics)
+  profile_name?: string; // owner's display name, for admin views
   platform: Platform;
   caption: string | null;
   permalink: string | null;

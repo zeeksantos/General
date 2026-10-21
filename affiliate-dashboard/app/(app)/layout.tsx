@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,11 @@ async function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <header className="flex items-center justify-between border-b border-border px-6 py-3">
-        <span className="font-semibold">Affiliate Dashboard</span>
+        <nav className="flex items-center gap-4 text-sm">
+          <span className="font-semibold">Affiliate Dashboard</span>
+          <Link href="/dashboard" className="hover:underline">My videos</Link>
+          {profile?.role === "admin" && <Link href="/admin" className="hover:underline">Admin</Link>}
+        </nav>
         <div className="flex items-center gap-3 text-sm">
           <span className="text-muted-foreground">
             {profile?.name || user.email}

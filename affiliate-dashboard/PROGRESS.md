@@ -4,7 +4,7 @@
 - [x] **2.** Meta connect flow + encrypted token storage
 - [x] **3.** Sync Edge Function + cron + 90-day backfill
 - [x] **4.** Affiliate dashboard (KPIs, trends, top videos with platform/week/month filters)
-- [ ] 5. Admin view + leaderboard
+- [x] **5.** Admin view + leaderboard
 - [ ] 6. Demo mode with seeded fake data
 - [ ] 7. Privacy policy + data deletion callback pages, deploy to Vercel
 
@@ -52,3 +52,12 @@
 - New view `videos_with_latest_metrics` (`security_invoker`, migration `20261021000300_...`). The page filters `profile_id = current user`, so an admin's personal dashboard shows only their own videos (admin-wide views come in Phase 5).
 - Pure logic in `lib/dates.ts` and `lib/stats.ts`, covered by `npm test` (17 tests).
 - Not yet seen with real data (no Supabase/Meta here); Phase 6 demo mode will let the UI be reviewed visually. Thumbnails are hotlinked Meta CDN URLs, which can expire; a placeholder box shows if missing, and a re-sync refreshes them.
+
+## Phase 5 notes
+- `/admin` (nav link shown to admins only): non-admins get a 404 from the page and the re-sync action also re-checks the role server-side; RLS already limits what a non-admin could read.
+- Leaderboard: top 25 videos across all affiliates with the same platform / week-month-all / views-reach filters (reuses `TopVideos` with `basePath="/admin"` and an affiliate name per row).
+- Affiliate table: connected accounts, sync status (up to date / not synced yet / needs reconnect / no accounts), 30-day views & reach (videos published in the last 30 Manila days, same rule as the affiliate dashboard), and a **Re-sync** button per affiliate that calls the sync function scoped to that `profile_id` (shared helper `lib/sync.ts`). "Last synced" shows the *oldest* active account so a stale one isn't masked.
+- Migration `20261021000400_admin_support.sql`: `profiles.email` (backfilled; set by the sign-up trigger) and `profile_name` on `videos_with_latest_metrics`.
+- Admin accounts themselves are excluded from the affiliate table (an admin who also posts videos sees their own on `/dashboard`).
+- Reads page through PostgREST's 1000-row limit (`lib/supabase/fetch-all.ts`). Everything is aggregated in the app; if the affiliate count grows large, move the 30-day totals into a SQL view/RPC.
+- Tests: `lib/admin.test.ts` (summary status, totals, ordering). Not yet exercised against a live database.
