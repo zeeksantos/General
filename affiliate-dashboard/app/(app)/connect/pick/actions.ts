@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { DEMO_MODE } from "@/lib/config";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { listPages } from "@/lib/meta/oauth";
@@ -10,6 +11,7 @@ import { deleteToken, readToken, storeToken } from "@/lib/meta/tokens";
 const PENDING_COOKIE = "meta_pending_token";
 
 export async function selectPage(formData: FormData) {
+  if (DEMO_MODE) redirect("/dashboard?connect_error=demo");
   const pageId = String(formData.get("page_id") ?? "");
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -79,6 +81,7 @@ export async function selectPage(formData: FormData) {
 }
 
 export async function disconnect(formData: FormData) {
+  if (DEMO_MODE) redirect("/dashboard?connect_error=demo");
   const id = String(formData.get("connection_id") ?? "");
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

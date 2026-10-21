@@ -5,7 +5,7 @@
 - [x] **3.** Sync Edge Function + cron + 90-day backfill
 - [x] **4.** Affiliate dashboard (KPIs, trends, top videos with platform/week/month filters)
 - [x] **5.** Admin view + leaderboard
-- [ ] 6. Demo mode with seeded fake data
+- [x] **6.** Demo mode with seeded fake data
 - [ ] 7. Privacy policy + data deletion callback pages, deploy to Vercel
 
 ## Phase 1 notes
@@ -61,3 +61,11 @@
 - Admin accounts themselves are excluded from the affiliate table (an admin who also posts videos sees their own on `/dashboard`).
 - Reads page through PostgREST's 1000-row limit (`lib/supabase/fetch-all.ts`). Everything is aggregated in the app; if the affiliate count grows large, move the 30-day totals into a SQL view/RPC.
 - Tests: `lib/admin.test.ts` (summary status, totals, ordering). Not yet exercised against a live database.
+
+## Phase 6 notes
+- `DEMO_MODE=true`: no login, no Supabase/Meta needed (verified by building and running with no Supabase env vars). `/login` redirects to `/dashboard`; the demo viewer is a fake creator ("Maria Santos") who is also an admin so `/admin` can be shown. A yellow banner shows on every page; "Sign out" is hidden.
+- `lib/demo/data.ts`: deterministic (seeded PRNG), relative to the current date, no network (SVG data-URI thumbnails). 6 affiliates with FB + IG; one has an Instagram connection that `needs_reconnect`, one has never synced; IG videos always have 0 link clicks. Unit-tested (`lib/demo/data.test.ts`).
+- `lib/data.ts` (`loadMyData`, `loadAdminData`) is the single data-access layer for both pages: demo data or Supabase. `lib/viewer.ts` (`getViewer`) is the single source for the signed-in user + role.
+- Demo-mode no-ops: Connect redirects to the dashboard with a "demo" notice; `selectPage`, `disconnect`, "Sync now" and admin "Re-sync" never touch Supabase/Meta.
+- Fixed while here: the personal dashboard's connections list was not filtered by owner, so an admin would have seen everyone's accounts under "Your accounts" (now `profile_id = viewer`).
+- Visual check (headless Chromium, desktop + 390px mobile): no console errors; fixed clipped chart axis labels, overshooting chart curve, and a cramped mobile header.

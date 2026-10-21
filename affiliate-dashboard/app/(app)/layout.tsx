@@ -1,39 +1,40 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { DEMO_MODE } from "@/lib/config";
+import { getViewer } from "@/lib/viewer";
 import { Button } from "@/components/ui/button";
 
 async function Shell({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("name, role")
-    .eq("id", user.id)
-    .single();
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-border px-6 py-3">
-        <nav className="flex items-center gap-4 text-sm">
-          <span className="font-semibold">Affiliate Dashboard</span>
-          <Link href="/dashboard" className="hover:underline">My videos</Link>
-          {profile?.role === "admin" && <Link href="/admin" className="hover:underline">Admin</Link>}
+      {DEMO_MODE && (
+        <div role="status" className="bg-amber-100 px-6 py-1.5 text-center text-sm text-amber-900">
+          Demo mode — you are looking at sample data, not real accounts.
+        </div>
+      )}
+      <header className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-border px-4 py-3 sm:px-6">
+        <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+          <span className="font-semibold whitespace-nowrap">Affiliate Dashboard</span>
+          <Link href="/dashboard" className="whitespace-nowrap hover:underline">My videos</Link>
+          {viewer.role === "admin" && <Link href="/admin" className="hover:underline">Admin</Link>}
         </nav>
         <div className="flex items-center gap-3 text-sm">
           <span className="text-muted-foreground">
-            {profile?.name || user.email}
-            {profile?.role === "admin" && " · Admin"}
+            {viewer.name || viewer.email}
+            {viewer.role === "admin" && " · Admin"}
           </span>
-          <form action="/auth/signout" method="post">
-            <Button variant="outline" size="sm" type="submit">Sign out</Button>
-          </form>
+          {!DEMO_MODE && (
+            <form action="/auth/signout" method="post">
+              <Button variant="outline" size="sm" type="submit">Sign out</Button>
+            </form>
+          )}
         </div>
       </header>
-      <div className="flex-1 p-6">{children}</div>
+      <div className="flex-1 p-4 sm:p-6">{children}</div>
     </div>
   );
 }

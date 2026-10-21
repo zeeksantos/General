@@ -1,10 +1,16 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { DEMO_MODE } from "@/lib/config";
 
 const PUBLIC_PATHS = ["/login", "/auth", "/privacy", "/data-deletion"];
 
 // Refreshes the Supabase session and gates everything except public paths.
 export async function updateSession(request: NextRequest) {
+  if (DEMO_MODE) {
+    // No login in demo mode (all data is fake); /login just goes to the dashboard.
+    if (request.nextUrl.pathname === "/login") return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.next({ request });
+  }
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(

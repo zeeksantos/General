@@ -1,12 +1,12 @@
 import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { TopVideos } from "@/components/dashboard/top-videos";
-import { affiliateSummaries, type ConnectionSummaryRow, type ProfileRow, type SyncStatus } from "@/lib/admin";
+import { affiliateSummaries, type SyncStatus } from "@/lib/admin";
 import { addDays, manilaDate } from "@/lib/dates";
 import { formatDate, formatNumber } from "@/lib/format";
-import { topVideos, type SortKey, type TopWindow, type VideoStat } from "@/lib/stats";
-import { fetchAll } from "@/lib/supabase/fetch-all";
-import { createClient } from "@/lib/supabase/server";
+import { loadAdminData } from "@/lib/data";
+import { topVideos, type SortKey, type TopWindow } from "@/lib/stats";
+import { getViewer } from "@/lib/viewer";
 import { cn } from "@/lib/utils";
 import { resyncAffiliate } from "./actions";
 
@@ -25,25 +25,15 @@ const SYNC_MESSAGE: Record<string, string> = {
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-  const { data: me } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-  if (me?.role !== "admin") notFound(); // RLS would hide the data anyway; don't reveal the page either
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
+  if (viewer.role !== "admin") notFound(); // RLS would hide the data anyway; don't reveal the page either
 
   const today = manilaDate(new Date());
   const platform = sp.platform === "facebook" || sp.platform === "instagram" ? sp.platform : "all";
   const top: TopWindow = sp.top === "week" || sp.top === "month" ? sp.top : "all";
   const sort: SortKey = sp.sort === "reach" ? "reach" : "views";
-
-  const [profiles, connections, videos] = await Promise.all([
-    fetchAll<ProfileRow & { role: string }>((a, b) =>
-      supabase.from("profiles").select("id, name, email, role").eq("role", "affiliate").order("created_at").range(a, b)),
-    fetchAll<ConnectionSummaryRow>((a, b) =>
-      supabase.from("connections").select("profile_id, platform, account_name, status, last_synced_at").order("created_at").range(a, b)),
-    fetchAll<VideoStat>((a, b) =>
-      supabase.from("videos_with_latest_metrics").select("*").order("published_at", { ascending: false }).order("id").range(a, b)),
-  ]);
+  const { profiles, connections, videos } = await loadAdminData();
 
   const summaries = affiliateSummaries(profiles, connections, videos, { from: addDays(today, -29), to: today });
   const who = sp.who ? summaries.find((s) => s.profile.id === sp.who)?.profile : undefined;

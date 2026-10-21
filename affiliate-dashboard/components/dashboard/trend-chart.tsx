@@ -1,6 +1,7 @@
 "use client";
 
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { formatCompact, formatNumber } from "@/lib/format";
 import type { TrendPoint } from "@/lib/stats";
 
 const FB = "#2563eb";
@@ -15,11 +16,11 @@ function Chart({ data, metric, title }: { data: TrendPoint[]; metric: "views" | 
           <LineChart data={data} margin={{ left: 0, right: 8, top: 4, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis dataKey="date" tickFormatter={(d: string) => d.slice(5)} fontSize={12} minTickGap={24} />
-            <YAxis fontSize={12} width={44} allowDecimals={false} />
-            <Tooltip />
+            <YAxis fontSize={12} width={52} allowDecimals={false} tickFormatter={(n: number) => formatCompact(n)} />
+            <Tooltip formatter={(v) => formatNumber(Number(v))} />
             <Legend />
-            <Line type="monotone" dataKey={`facebook_${metric}`} name="Facebook" stroke={FB} dot={false} strokeWidth={2} />
-            <Line type="monotone" dataKey={`instagram_${metric}`} name="Instagram" stroke={IG} dot={false} strokeWidth={2} />
+            <Line type="linear" dataKey={`facebook_${metric}`} name="Facebook" stroke={FB} dot={false} strokeWidth={2} />
+            <Line type="linear" dataKey={`instagram_${metric}`} name="Instagram" stroke={IG} dot={false} strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
