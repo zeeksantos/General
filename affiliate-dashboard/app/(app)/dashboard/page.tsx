@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { DeleteDataCard } from "@/components/delete-data-card";
 import { ConnectionsCard } from "@/components/connections-card";
 import { KpiCards } from "@/components/dashboard/kpi-cards";
 import { PeriodSelector } from "@/components/dashboard/period-selector";
@@ -88,6 +89,12 @@ export default async function DashboardPage({
           />
         </>
       )}
+      {sp.delete_error && (
+        <p role="alert" className="max-w-xl rounded-md border border-destructive p-3 text-sm text-destructive">
+          {sp.delete_error === "confirm" ? "Type DELETE exactly to confirm." : "We couldn't delete your data. Please try again or contact us."}
+        </p>
+      )}
+      <DeleteDataCard />
     </div>
   );
 }

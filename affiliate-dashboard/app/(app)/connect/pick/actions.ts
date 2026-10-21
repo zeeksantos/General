@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { DEMO_MODE } from "@/lib/config";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { graphGet } from "@/lib/meta/graph";
 import { listPages } from "@/lib/meta/oauth";
 import { deleteToken, readToken, storeToken } from "@/lib/meta/tokens";
 
@@ -24,7 +25,10 @@ export async function selectPage(formData: FormData) {
   let outcome = "connected";
   try {
     const userToken = await readToken(pendingId);
-    const page = (await listPages(userToken)).find((p) => p.id === pageId);
+    const [page, me] = await Promise.all([
+      listPages(userToken).then((pages) => pages.find((p) => p.id === pageId)),
+      graphGet<{ id: string }>("me", { fields: "id" }, userToken), // app-scoped user id, needed for deletion requests
+    ]);
     if (!page) redirect("/dashboard?connect_error=page");
 
     const admin = createAdminClient();
@@ -58,6 +62,7 @@ export async function selectPage(formData: FormData) {
           account_name: t.name,
           token_secret_id: secretId,
           token_expires_at: null,
+          meta_user_id: me.id,
           status: "active",
         },
         { onConflict: "profile_id,platform,external_account_id" },

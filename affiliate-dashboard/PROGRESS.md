@@ -6,7 +6,7 @@
 - [x] **4.** Affiliate dashboard (KPIs, trends, top videos with platform/week/month filters)
 - [x] **5.** Admin view + leaderboard
 - [x] **6.** Demo mode with seeded fake data
-- [ ] 7. Privacy policy + data deletion callback pages, deploy to Vercel
+- [x] **7.** Privacy policy + data deletion callback pages, deploy to Vercel
 
 ## Phase 1 notes
 - Magic-link auth: `/login` -> `/auth/callback`; `proxy.ts` (Next 16's replacement for `middleware.ts`) refreshes the session and redirects unauthenticated users to `/login`.
@@ -69,3 +69,12 @@
 - Demo-mode no-ops: Connect redirects to the dashboard with a "demo" notice; `selectPage`, `disconnect`, "Sync now" and admin "Re-sync" never touch Supabase/Meta.
 - Fixed while here: the personal dashboard's connections list was not filtered by owner, so an admin would have seen everyone's accounts under "Your accounts" (now `profile_id = viewer`).
 - Visual check (headless Chromium, desktop + 390px mobile): no console errors; fixed clipped chart axis labels, overshooting chart curve, and a cramped mobile header.
+
+## Phase 7 notes
+- Public pages (no login): `/privacy`, `/data-deletion` (instructions), `/data-deletion/status?code=` and the Meta callback `POST /data-deletion/callback`.
+- Callback: verifies Meta's `signed_request` (HMAC-SHA256 with `META_APP_SECRET`, constant-time compare; unit-tested incl. forged/tampered/wrong-algorithm cases), deletes all connections for that Meta user (Vault tokens first, then rows → cascades to videos and metrics), records a `deletion_requests` row (random 128-bit code, no personal data) and returns `{url, confirmation_code}`. The user's login/profile is kept (they may have other uses); they can remove it with in-app "Delete my data".
+- To make that mapping possible, the connect flow now stores `connections.meta_user_id` (app-scoped Facebook user id; not readable by clients). Connections created before this migration have none and can't be matched by Meta's callback (none exist yet).
+- In-app **Delete my data** (bottom of the dashboard, type `DELETE`): deletes tokens, connections, videos/metrics and the auth user, then signs out. No-op in demo mode.
+- `docs/DEPLOY.md`: Supabase / Vercel / Meta app / App Review checklist incl. permission justifications and screencast outline.
+- Contact email on the policy pages comes from `NEXT_PUBLIC_CONTACT_EMAIL`; set it before App Review. Privacy text is a plain-language draft and needs a legal read-through.
+- **Not deployed**: publishing to Vercel needs your account/project and is outward-facing, so it's left for you to confirm.
