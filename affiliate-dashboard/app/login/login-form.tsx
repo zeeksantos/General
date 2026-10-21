@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuthCard, FormMessage } from "@/components/auth/auth-card";
 import { Field } from "@/components/auth/field";
+import { CAPTCHA_MESSAGE, isCaptchaError, useCaptcha } from "@/components/auth/turnstile";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 
@@ -15,6 +16,7 @@ export function LoginForm({ notice }: { notice?: string }) {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "busy" | "sent">("idle");
   const [error, setError] = useState(notice ?? "");
+  const captcha = useCaptcha();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -22,9 +24,11 @@ export function LoginForm({ notice }: { notice?: string }) {
     setError("");
     const supabase = createClient();
     if (mode === "password") {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email, password, options: { captchaToken: captcha.token } });
       if (error) {
         setStatus("idle");
+        captcha.reset();
+        if (isCaptchaError(error.code)) return setError(CAPTCHA_MESSAGE);
         // Same message for unknown email and wrong password, so accounts can't be probed.
         setError(error.code === "email_not_confirmed" ? "Please confirm your email first. Check your inbox for the link." : "Incorrect email or password.");
         return;
@@ -34,9 +38,14 @@ export function LoginForm({ notice }: { notice?: string }) {
     } else {
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback`, shouldCreateUser: false },
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback`, shouldCreateUser: false, captchaToken: captcha.token },
       });
       // Don't reveal whether the address has an account.
+      captcha.reset();
+      if (error && isCaptchaError(error.code)) {
+        setStatus("idle");
+        return setError(CAPTCHA_MESSAGE);
+      }
       if (error && error.status !== 400) {
         setStatus("idle");
         setError("We couldn't send the link right now. Please try again in a few minutes.");
@@ -63,7 +72,8 @@ export function LoginForm({ notice }: { notice?: string }) {
         {mode === "password" && (
           <Field label="Password" type="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
         )}
-        <Button type="submit" disabled={status === "busy"}>
+        {captcha.widget}
+        <Button type="submit" disabled={status === "busy" || !captcha.ready}>
           {status === "busy" ? "Please wait…" : mode === "password" ? "Sign in" : "Email me a sign-in link"}
         </Button>
         {error && <FormMessage kind="error">{error}</FormMessage>}

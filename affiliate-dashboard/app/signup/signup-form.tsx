@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuthCard, FormMessage } from "@/components/auth/auth-card";
 import { Field } from "@/components/auth/field";
+import { CAPTCHA_MESSAGE, isCaptchaError, useCaptcha } from "@/components/auth/turnstile";
 import { Button } from "@/components/ui/button";
 import { validateName, validatePassword } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/client";
@@ -17,6 +18,7 @@ export function SignupForm() {
   const [agreed, setAgreed] = useState(false);
   const [status, setStatus] = useState<"idle" | "busy" | "confirm">("idle");
   const [error, setError] = useState("");
+  const captcha = useCaptcha();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,11 +32,14 @@ export function SignupForm() {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
+        captchaToken: captcha.token,
         data: { name: name.trim(), terms_accepted: true }, // consent time is stamped server-side
       },
     });
     if (error) {
       setStatus("idle");
+      captcha.reset();
+      if (isCaptchaError(error.code)) return setError(CAPTCHA_MESSAGE);
       setError(error.code === "weak_password" ? "That password is too easy to guess. Try a longer one." : "We couldn't create your account. Please check your details and try again.");
       return;
     }
@@ -74,7 +79,8 @@ export function SignupForm() {
             <Link className="underline" href="/privacy" target="_blank">Privacy Policy</Link>.
           </span>
         </label>
-        <Button type="submit" disabled={status === "busy"}>{status === "busy" ? "Creating account…" : "Create account"}</Button>
+        {captcha.widget}
+        <Button type="submit" disabled={status === "busy" || !captcha.ready}>{status === "busy" ? "Creating account…" : "Create account"}</Button>
         {error && <FormMessage kind="error">{error}</FormMessage>}
         <span className="text-sm text-muted-foreground">
           Already have an account? <Link className="underline" href="/login">Sign in</Link>

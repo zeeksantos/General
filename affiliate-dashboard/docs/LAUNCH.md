@@ -18,9 +18,17 @@ security). Admins are still promoted by hand.
 - [ ] **Authentication → Email Templates:** edit the "Confirm sign up", "Magic link" and "Reset password" texts so they
       mention Z-Fast and what the app is; keep the `{{ .ConfirmationURL }}` link.
 - [ ] **Authentication → Rate Limits:** review the defaults for sign-ups, sign-ins and email sending.
-- [ ] **Do NOT turn on CAPTCHA protection yet.** Once it is on, Supabase rejects sign-up and sign-in requests that don't
-      include a CAPTCHA token, and the forms don't send one yet. Ask for it to be added first (Cloudflare Turnstile is a good
-      free choice) and then enable it.
+- [ ] **CAPTCHA (Cloudflare Turnstile), in this order, because Supabase rejects sign-ups/sign-ins without a token once it is on:**
+  1. Cloudflare dashboard → Turnstile → **Add widget** (free). Hostnames: your production domain (and `localhost` for local
+     testing). Mode: Managed. Copy the **Site key** and the **Secret key**.
+  2. Vercel → set `NEXT_PUBLIC_TURNSTILE_SITE_KEY` = the site key (Production), then **redeploy** (it is baked in at build time).
+     Open `/signup` and confirm the check appears and the button enables once it passes.
+  3. **Only then** Supabase → Authentication → Attack Protection → enable **CAPTCHA protection**, provider **Turnstile**, paste
+     the **Secret key**, save.
+  4. Test sign-up, sign-in (password and email link) and forgot-password.
+  - To switch it off: disable CAPTCHA in Supabase **first**, then remove the site key. Never the other way round.
+  - Preview deployments get random hostnames; either add them to the widget or test CAPTCHA only on the production domain.
+  - If the widget doesn't appear, an ad blocker or a Content-Security-Policy may be blocking `challenges.cloudflare.com`.
 - [ ] **Authentication → Attack Protection:** leaked-password protection is on paid plans only.
 
 ## Plan limits to know about (Free plan)
