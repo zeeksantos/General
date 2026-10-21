@@ -1,6 +1,8 @@
+import { APP_TIMEZONE } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { disconnect } from "@/app/(app)/connect/pick/actions";
+import { syncNow } from "@/app/(app)/dashboard/actions";
 
 export type ConnectionRow = {
   id: string;
@@ -33,6 +35,9 @@ export function ConnectionsCard({ connections }: { connections: ConnectionRow[] 
                 ) : (
                   "Connected"
                 )}
+                {c.last_synced_at
+                  ? ` · Last synced ${new Date(c.last_synced_at).toLocaleString("en-PH", { timeZone: APP_TIMEZONE, dateStyle: "medium", timeStyle: "short" })}`
+                  : " · Not synced yet"}
               </div>
             </div>
             <form action={disconnect}>
@@ -41,6 +46,11 @@ export function ConnectionsCard({ connections }: { connections: ConnectionRow[] 
             </form>
           </div>
         ))}
+        {connections.length > 0 && (
+          <form action={syncNow} className="self-start">
+            <Button type="submit" variant="outline">Sync now</Button>
+          </form>
+        )}
         <Button asChild className="self-start">
           {/* Plain anchor: this starts an external OAuth redirect, not a client navigation. */}
           <a href="/api/meta/connect">

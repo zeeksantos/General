@@ -1,0 +1,5 @@
+project_id = "affiliate-dashboard"
+
+# Called by pg_cron and by the app with a shared secret (x-sync-secret), not a user JWT.
+[functions.sync]
+verify_jwt = false

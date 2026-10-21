@@ -12,9 +12,9 @@ const ERRORS: Record<string, string> = {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ connect_error?: string; connected?: string }>;
+  searchParams: Promise<{ connect_error?: string; connected?: string; synced?: string }>;
 }) {
-  const { connect_error, connected } = await searchParams;
+  const { connect_error, connected, synced } = await searchParams;
   const supabase = await createClient();
   const { data } = await supabase
     .from("connections")
@@ -45,6 +45,16 @@ export default async function DashboardPage({
       {connected === "connected" && (
         <p role="status" className="max-w-xl rounded-md border border-border p-3 text-sm">
           Connected! Your videos will show up after the first sync.
+        </p>
+      )}
+      {synced && (
+        <p role="status" className="max-w-xl rounded-md border border-border p-3 text-sm">
+          {{
+            ok: "Sync finished.",
+            partial: "Sync ran but didn't finish in time. It will continue on the next sync.",
+            throttled: "Facebook asked us to slow down. We'll try again automatically.",
+            failed: "We couldn't start the sync. Please try again later.",
+          }[synced] ?? "Sync finished."}
         </p>
       )}
       <ConnectionsCard connections={connections} />

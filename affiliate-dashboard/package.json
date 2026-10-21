@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "node --test supabase/functions/sync/parse.test.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
