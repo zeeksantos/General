@@ -3,7 +3,7 @@
 - [x] **1. Scaffold Next.js + Supabase, auth, schema + RLS**
 - [x] **2.** Meta connect flow + encrypted token storage
 - [x] **3.** Sync Edge Function + cron + 90-day backfill
-- [ ] 4. Affiliate dashboard (KPIs, trends, top videos with platform/week/month filters)
+- [x] **4.** Affiliate dashboard (KPIs, trends, top videos with platform/week/month filters)
 - [ ] 5. Admin view + leaderboard
 - [ ] 6. Demo mode with seeded fake data
 - [ ] 7. Privacy policy + data deletion callback pages, deploy to Vercel
@@ -42,3 +42,13 @@
 ### Unverified (no access to Meta docs or a live account from the build sandbox)
 - Metric names are from SPEC §5 and were NOT checked against the v25.0 docs: IG `views, reach, likes, comments, shares, saved, total_interactions, ig_reels_avg_watch_time, ig_reels_video_view_total_time, profile_links_taps`; FB `post_media_view, post_total_media_view_unique, post_clicks_by_type`. Unsupported metrics are skipped individually and reported in the function's `warnings`, so a retired metric degrades to 0 rather than failing the sync — check `warnings` on the first real run.
 - Facebook `/posts` attachment shape (`attachments{media_type,target{id}}`) and the key `"link clicks"` in `post_clicks_by_type` are from the spec/memory. The Deno code was only type-checked (with stubs) and its pure logic unit-tested; it has never run against Supabase or Meta.
+
+## Phase 4 notes
+- Dashboard (`/dashboard`) is driven by URL params, rendered on the server (no client state): `range=7d|30d|month|custom&from&to` (KPIs + trend), `platform=all|facebook|instagram`, `top=week|month|all`, `sort=views|reach` (top videos). Custom ranges are validated (max 366 days) and fall back to 30 days.
+- **Period semantics (decision):** a video counts in the period it was *published* (Asia/Manila days), using its latest lifetime metrics. Reason: `video_metrics_daily` snapshots only start at the first sync, so true in-period deltas aren't possible yet; this works from day one with the 90-day backfill and is easy to explain. % change compares with the previous period of equal length (shows "No earlier data" when the baseline is 0). The trend chart is "by day posted" for the same reason. Once snapshots accumulate, view-growth deltas can be added without schema changes.
+- Weeks start Monday. "All time" = the 90 days that are synced. Total reach is a sum across videos (people can be counted twice) and is labelled so.
+- Link clicks: Facebook per video; Instagram shows "—" per video, and the KPI card shows account-level Instagram profile link taps for the period, clearly labelled.
+- "Why it worked" (expandable per row): hook (first non-empty caption line), length (FB only when Meta returns it), format (Reel / Facebook video post / Instagram feed video), posting day/time in Manila time.
+- New view `videos_with_latest_metrics` (`security_invoker`, migration `20261021000300_...`). The page filters `profile_id = current user`, so an admin's personal dashboard shows only their own videos (admin-wide views come in Phase 5).
+- Pure logic in `lib/dates.ts` and `lib/stats.ts`, covered by `npm test` (17 tests).
+- Not yet seen with real data (no Supabase/Meta here); Phase 6 demo mode will let the UI be reviewed visually. Thumbnails are hotlinked Meta CDN URLs, which can expire; a placeholder box shows if missing, and a re-sync refreshes them.
