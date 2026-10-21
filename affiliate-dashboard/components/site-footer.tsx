@@ -18,6 +18,7 @@ export function SiteFooter() {
           {EMAIL && <span>Email: <a className="underline" href={`mailto:${EMAIL}`}>{EMAIL}</a></span>}
         </address>
         <nav aria-label="Legal" className="flex gap-4 sm:items-start">
+          <Link className="underline" href="/terms">Terms</Link>
           <Link className="underline" href="/privacy">Privacy Policy</Link>
           <Link className="underline" href="/data-deletion">Data deletion</Link>
         </nav>

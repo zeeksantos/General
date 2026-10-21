@@ -14,6 +14,9 @@ export type ConnectionRow = {
 
 const PLATFORM_LABEL = { facebook: "Facebook Page", instagram: "Instagram" } as const;
 
+// Until Meta approves the app (App Review), only people added as testers can connect an account.
+const META_APP_LIVE = process.env.NEXT_PUBLIC_META_APP_LIVE === "true";
+
 export function ConnectionsCard({ connections }: { connections: ConnectionRow[] }) {
   return (
     <Card className="max-w-xl">
@@ -50,6 +53,12 @@ export function ConnectionsCard({ connections }: { connections: ConnectionRow[] 
           <form action={syncNow} className="self-start">
             <Button type="submit" variant="outline">Sync now</Button>
           </form>
+        )}
+        {!META_APP_LIVE && (
+          <p className="rounded-md border border-border p-3 text-xs text-muted-foreground">
+            Heads up: Facebook is still reviewing our app. Until it is approved, only invited testers can connect a Facebook
+            Page. You can create your account now and connect once the review is done.
+          </p>
         )}
         <Button asChild className="self-start">
           {/* Plain anchor: this starts an external OAuth redirect, not a client navigation. */}

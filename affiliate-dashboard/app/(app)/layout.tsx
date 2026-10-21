@@ -20,6 +20,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
         <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
           <span className="font-semibold whitespace-nowrap">Affiliate Dashboard</span>
           <Link href="/dashboard" className="whitespace-nowrap hover:underline">My videos</Link>
+          <Link href="/settings" className="whitespace-nowrap hover:underline">Settings</Link>
           {viewer.role === "admin" && <Link href="/admin" className="hover:underline">Admin</Link>}
         </nav>
         <div className="flex items-center gap-3 text-sm">
