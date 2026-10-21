@@ -36,8 +36,9 @@ accepted examples are (confirm in Meta's list for your country):
 Meta may check that the website shows the business is real.
 - [ ] The site loads publicly (Vercel deployment protection off) over HTTPS on **your own domain**.
 - [ ] Show the **legal business name**, a contact email and address/phone somewhere public. The privacy page already
-      names Z-Fast and shows the contact email once `NEXT_PUBLIC_CONTACT_EMAIL` is set; consider adding a small footer or
-      "About" line with the legal name and address (ask me and I'll add it).
+      names Z-Fast and shows the contact email once `NEXT_PUBLIC_CONTACT_EMAIL` is set; the site footer
+      shows them on every page. Set `NEXT_PUBLIC_BUSINESS_LEGAL_NAME`, `NEXT_PUBLIC_BUSINESS_ADDRESS`, `NEXT_PUBLIC_BUSINESS_PHONE`
+      and `NEXT_PUBLIC_CONTACT_EMAIL` in Vercel to match your documents exactly, then redeploy.
 - [ ] `/privacy` and `/data-deletion` open without signing in.
 - [ ] The business email domain matches the website domain where possible.
 
@@ -81,5 +82,4 @@ Common reasons and fixes:
 - [ ] Remove `business_management` from the login configuration and the request if you couldn't show it in use.
 
 ## What I can do for you
-- Add the legal name and address footer and an "About" line to the site.
 - Update every URL in the code, docs and Supabase/Vercel settings when you move to a custom domain.

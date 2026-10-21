@@ -13,7 +13,7 @@ Project `affiliate-dashboard` (ref `kysbcszbkxzxzbqttvsn`, Free plan, ap-southea
 ## 2. Vercel
 - [ ] Import the repo, **Root Directory = `affiliate-dashboard`**.
 - [ ] Environment variables (Production + Preview), names from `.env.example`:
-  `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SYNC_SECRET` are **already set** (Production). Still to add: `SUPABASE_SERVICE_ROLE_KEY`, `META_APP_ID`, `META_APP_SECRET`, `META_LOGIN_CONFIG_ID`, `NEXT_PUBLIC_CONTACT_EMAIL`.
+  `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SYNC_SECRET` are **already set** (Production). Still to add: `SUPABASE_SERVICE_ROLE_KEY`, `META_APP_ID`, `META_APP_SECRET`, `META_LOGIN_CONFIG_ID`, `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_BUSINESS_LEGAL_NAME`, `NEXT_PUBLIC_BUSINESS_ADDRESS`, `NEXT_PUBLIC_BUSINESS_PHONE` (footer details; they are baked in at build time, so redeploy after changing them).
 - [ ] **Delete `DEMO_MODE`** from Production and Preview (currently `true` as a temporary measure: it disables login and shows fake data). Do this last, after the items above, then redeploy.
 - [ ] Vercel Auth (deployment protection) is on; turn it off for Production (Settings → Deployment Protection) so Meta's reviewers can open `/privacy` and `/data-deletion`.
 - [ ] After the first deploy open `/privacy` and `/data-deletion` in a private window; both must load without signing in.
