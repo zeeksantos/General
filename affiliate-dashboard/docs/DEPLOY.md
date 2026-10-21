@@ -3,20 +3,19 @@
 Owner: Zeek. Nothing here is automated; tick items off in order.
 
 ## 1. Supabase
-- [ ] Create a project; enable the **Vault** extension (Database → Extensions).
-- [ ] `supabase link --project-ref <ref>` then `supabase db push` (applies everything in `supabase/migrations/`).
-- [ ] Auth → URL configuration: Site URL = your production URL; add redirect URLs `https://<domain>/auth/callback` and `http://localhost:3000/auth/callback`.
-- [ ] Auth → Email: configure SMTP (the built-in sender is heavily rate-limited) and set the magic-link template.
-- [ ] `supabase secrets set SYNC_SECRET=<random 32+ chars>` then `supabase functions deploy sync`.
-- [ ] SQL editor, create the cron Vault secrets (see the comment in `20261021000200_sync_support.sql`): `sync_function_url` and `sync_secret` (same value as `SYNC_SECRET`).
-- [ ] Promote yourself to admin: `update public.profiles set role='admin' where email='you@example.com';`
+Project `affiliate-dashboard` (ref `kysbcszbkxzxzbqttvsn`, Free plan, ap-southeast-1) is created and **already has**: all migrations applied, the `sync` Edge Function deployed (JWT check off; it authenticates callers itself), the Vault secrets `sync_secret` + `sync_function_url`, and the daily pg_cron job. Nothing to redo unless you create a new project; in that case: link, `supabase db push`, `supabase functions deploy sync`, then create the two Vault secrets (`sync_secret` = a random string, `sync_function_url` = `https://<ref>.supabase.co/functions/v1/sync`) and set the same random string as `SYNC_SECRET` in Vercel.
+- [ ] **Auth → URL configuration** (dashboard, cannot be scripted from here): Site URL = `https://affiliate-dashboard-xi.vercel.app` (or your custom domain); add redirect URLs `https://affiliate-dashboard-xi.vercel.app/auth/callback` and `http://localhost:3000/auth/callback`.
+- [ ] **Auth → Email**: the built-in sender allows only a few emails per hour; set up custom SMTP before inviting affiliates.
+- [ ] **Free plan note:** Free projects are paused after ~1 week without activity. The daily sync keeps it active once accounts are connected; before that, open the dashboard now and then, or upgrade.
+- [ ] Copy the **service_role / secret key** (Project Settings → API Keys) into Vercel as `SUPABASE_SERVICE_ROLE_KEY` (Production). It cannot be read by Claude's tooling and must never be committed.
+- [ ] After your first sign-up, promote yourself: `update public.profiles set role='admin' where email='you@example.com';`
 
 ## 2. Vercel
 - [ ] Import the repo, **Root Directory = `affiliate-dashboard`**.
 - [ ] Environment variables (Production + Preview), names from `.env.example`:
-  `NEXT_PUBLIC_SITE_URL` (https, no trailing slash), `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
-  `SUPABASE_SERVICE_ROLE_KEY`, `SYNC_SECRET`, `META_APP_ID`, `META_APP_SECRET`, `META_LOGIN_CONFIG_ID`, `NEXT_PUBLIC_CONTACT_EMAIL`.
-- [ ] **Do not** set `DEMO_MODE=true` in Production (it disables login and shows fake data).
+  `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SYNC_SECRET` are **already set** (Production). Still to add: `SUPABASE_SERVICE_ROLE_KEY`, `META_APP_ID`, `META_APP_SECRET`, `META_LOGIN_CONFIG_ID`, `NEXT_PUBLIC_CONTACT_EMAIL`.
+- [ ] **Delete `DEMO_MODE`** from Production and Preview (currently `true` as a temporary measure: it disables login and shows fake data). Do this last, after the items above, then redeploy.
+- [ ] Vercel Auth (deployment protection) is on; turn it off for Production (Settings → Deployment Protection) so Meta's reviewers can open `/privacy` and `/data-deletion`.
 - [ ] After the first deploy open `/privacy` and `/data-deletion` in a private window; both must load without signing in.
 
 ## 3. Meta app (developers.facebook.com)

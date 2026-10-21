@@ -78,3 +78,10 @@
 - `docs/DEPLOY.md`: Supabase / Vercel / Meta app / App Review checklist incl. permission justifications and screencast outline.
 - Contact email on the policy pages comes from `NEXT_PUBLIC_CONTACT_EMAIL`; set it before App Review. Privacy text is a plain-language draft and needs a legal read-through.
 - **Not deployed**: publishing to Vercel needs your account/project and is outward-facing, so it's left for you to confirm.
+
+## Deployment status (2026-10-21)
+- **Vercel:** project `affiliate-dashboard` (team `zeek-s-projects`), root `affiliate-dashboard`, connected to `zeeksantos/general`. Production alias `https://affiliate-dashboard-xi.vercel.app`. Currently runs with `DEMO_MODE=true` (temporary) and Vercel Auth protection on.
+- **Supabase:** new Free-plan project `affiliate-dashboard` (`kysbcszbkxzxzbqttvsn`, ap-southeast-1). No extra cost (the org's second free project). All migrations applied (plus `20261021000600` function-privilege hardening from the security advisor, and `20261021000700` Vault-based sync secret check). `sync` function deployed and tested end-to-end through pg_net: no/wrong secret -> 401, right secret -> 200. Cron job `daily-meta-sync` active (19:00 UTC).
+- **Sync auth changed:** the function now verifies `x-sync-secret` against the Vault secret via `public.check_sync_secret` instead of an Edge Function secret, so no manual secret entry in the Supabase dashboard is needed. The same value is `SYNC_SECRET` in Vercel (Production, sensitive).
+- **Deploying the function from this environment** bundled a generated copy of `lib/meta/config.ts` as `graph-config.ts` (the CLI deploy follows the relative import, so the repo keeps the single constant).
+- **Still manual (cannot be done with the available tools):** Supabase Auth URL/redirect config and SMTP; `SUPABASE_SERVICE_ROLE_KEY` into Vercel; the Meta app (+ `META_*` vars, Business Verification, App Review); `NEXT_PUBLIC_CONTACT_EMAIL`; turning off Vercel deployment protection; deleting `DEMO_MODE`. See `docs/DEPLOY.md`.

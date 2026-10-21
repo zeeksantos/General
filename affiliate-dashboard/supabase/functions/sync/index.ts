@@ -1,5 +1,6 @@
 // Supabase Edge Function: syncs Facebook/Instagram videos + insights into Postgres.
-// Invoked daily by pg_cron and on demand by the app, both with the `x-sync-secret` header.
+// Invoked daily by pg_cron and on demand by the app, both with the `x-sync-secret` header
+// (verified against the Vault secret `sync_secret` via public.check_sync_secret).
 // Body (all optional): { connection_id?: string, profile_id?: string }
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { insightsTolerant, graphGet, MetaError, paginate, ThrottledError } from "./meta.ts";
@@ -26,17 +27,11 @@ type VideoRow = {
 };
 type Item = { video: VideoRow; fetchMetrics: () => Promise<VideoMetrics> };
 
-const timingSafeEqual = (a: string, b: string) => {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
-};
-
 Deno.serve(async (req) => {
-  const secret = Deno.env.get("SYNC_SECRET");
+  // Callers prove they know the shared secret kept in Vault (checked in SQL, see migration 20261021000700).
   const given = req.headers.get("x-sync-secret") ?? "";
-  if (!secret || !timingSafeEqual(given, secret)) return new Response("Unauthorized", { status: 401 });
+  const { data: ok } = given ? await db.rpc("check_sync_secret", { p_given: given }) : { data: false };
+  if (ok !== true) return new Response("Unauthorized", { status: 401 });
 
   const body = await req.json().catch(() => ({}));
   const deadline = Date.now() + TIME_BUDGET_MS;
