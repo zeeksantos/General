@@ -70,5 +70,5 @@ rejects permissions it cannot see being used.
    in the private field of the submission).
 2. Press **Connect Facebook & Instagram**, approve the dialog, select the test Page, then press **Connect**.
 3. Press **Sync now**. After it finishes the dashboard shows KPI cards, charts and the Top videos table.
-4. Use **Disconnect** and **Delete my data** (type `DELETE`) at the bottom of the dashboard to see data removal.
+4. Use **Disconnect** and **Delete my data** (type `DELETE`) in Settings to see data removal.
 The test Page has a linked Instagram Business account and recent videos.

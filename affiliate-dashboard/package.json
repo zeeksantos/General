@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --test supabase/functions/sync/parse.test.ts lib/dates.test.ts lib/stats.test.ts lib/admin.test.ts lib/demo/data.test.ts lib/meta/signed-request.test.ts lib/auth.test.ts lib/admin-users.test.ts lib/sync-log.test.ts",
+    "test": "node --test supabase/functions/sync/parse.test.ts lib/dates.test.ts lib/stats.test.ts lib/admin.test.ts lib/demo/data.test.ts lib/meta/signed-request.test.ts lib/auth.test.ts lib/admin-users.test.ts lib/sync-log.test.ts lib/format.test.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

@@ -55,3 +55,20 @@ test("whyItWorked", () => {
   assert.equal(whyItWorked(v({})).hook, "No caption");
   assert.equal(whyItWorked(v({})).length, "Not available");
 });
+
+test("trend: daily for short ranges, weekly (Monday start) for long ones", async () => {
+  const { trendBucket } = await import("./stats.ts");
+  assert.equal(trendBucket({ from: "2026-10-01", to: "2026-10-21" }), "day");
+  assert.equal(trendBucket({ from: "2026-08-01", to: "2026-10-21" }), "week");
+  const weekly = trend(
+    [
+      v({ views: 10, reach: 5, published_at: "2026-10-19T04:00:00Z" }), // Mon 19
+      v({ views: 30, reach: 8, published_at: "2026-10-21T04:00:00Z" }), // Wed 21 (same week)
+      v({ views: 99, published_at: "2026-09-01T00:00:00Z" }),           // outside range
+    ],
+    { from: "2026-10-12", to: "2026-10-21" }, "week",
+  );
+  assert.deepEqual(weekly.map((p) => p.date), ["2026-10-12", "2026-10-19"]);
+  assert.equal(weekly[1].facebook_views, 40);
+  assert.equal(weekly[0].facebook_views, 0);
+});

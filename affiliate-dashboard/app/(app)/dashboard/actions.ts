@@ -22,14 +22,14 @@ export async function deleteMyData(formData: FormData) {
   const viewer = await getViewer();
   if (!viewer) redirect("/login");
   if (DEMO_MODE) redirect("/dashboard?connect_error=demo");
-  if (String(formData.get("confirm") ?? "").trim() !== "DELETE") redirect("/dashboard?delete_error=confirm");
+  if (String(formData.get("confirm") ?? "").trim() !== "DELETE") redirect("/settings?delete_error=confirm");
 
   try {
     await deleteConnectionsForProfile(viewer.id); // tokens first, then rows (cascades to videos/metrics)
     const { error } = await createAdminClient().auth.admin.deleteUser(viewer.id); // cascades to the profile
     if (error) throw error;
   } catch {
-    redirect("/dashboard?delete_error=failed");
+    redirect("/settings?delete_error=failed");
   }
   await (await createClient()).auth.signOut();
   redirect("/login");

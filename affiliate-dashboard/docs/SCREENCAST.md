@@ -31,7 +31,7 @@ Business/Creator account, and a few videos from the last 90 days. Narrate in Eng
 | 2:45 | Expand **Why it worked** on one video. | "For each video we show the hook, length, format and posting time, so creators can learn what works. Link clicks exist per video on Facebook only. For Instagram we show account-level profile link taps and label it that way." |
 | 3:00 | *(Only if you request it.)* Show the Page picker or **Your accounts** again. | "**business_management**: needed to read Pages and Instagram accounts that are owned through a Business portfolio. If it is not required for your account, remove it from the request." |
 | 3:10 | Click **Disconnect** on one account and confirm it disappears. Reconnect it if you want to continue. | "A user can disconnect any account at any time. That removes its token and its statistics." |
-| 3:20 | Scroll to **Delete my data**, expand it, type `DELETE`, press **Delete everything**. You land on the login page. | "Users can delete all of their data at any time. This removes their connected accounts, tokens, statistics and login." |
+| 3:20 | Open **Settings**, scroll to **Delete my data**, expand it, type `DELETE`, press **Delete everything**. You land on the login page. | "Users can delete all of their data at any time. This removes their connected accounts, tokens, statistics and login." |
 | 3:35 | Open `/data-deletion` and `/privacy` in the address bar for a few seconds each. | "Our privacy policy and data deletion instructions are public. Facebook can also send us a data deletion request, which we process automatically." |
 | 3:45 | End on the privacy page. | "That is how the app uses each permission. Thank you." |
 

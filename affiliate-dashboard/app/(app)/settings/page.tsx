@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { DeleteDataCard } from "@/components/delete-data-card";
+import { Notice } from "@/components/notice";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,15 +18,15 @@ const MESSAGES: Record<string, string> = {
   demo: "Demo mode: changes aren't saved.",
 };
 
-export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ saved?: string }> }) {
+export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ saved?: string; delete_error?: string }> }) {
   const viewer = await getViewer();
   if (!viewer) redirect("/login");
-  const { saved } = await searchParams;
+  const { saved, delete_error } = await searchParams;
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
       <h1 className="text-xl font-semibold">Account settings</h1>
-      {saved && <p role="status" className="rounded-md border border-border p-3 text-sm">{MESSAGES[saved] ?? MESSAGES.failed}</p>}
+      {saved && <Notice kind={saved === "ok" ? "success" : saved === "demo" ? "info" : "error"}>{MESSAGES[saved] ?? MESSAGES.failed}</Notice>}
 
       <Card>
         <CardHeader>
@@ -53,6 +54,9 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
         </CardContent>
       </Card>
 
+      {delete_error && (
+        <Notice kind="error">{delete_error === "confirm" ? "Type DELETE exactly to confirm." : "We couldn't delete your data. Please try again or contact us."}</Notice>
+      )}
       <DeleteDataCard />
     </div>
   );

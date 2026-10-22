@@ -15,7 +15,7 @@ export default function DataDeletionPage() {
       <h2 className="mt-2 text-lg font-semibold">1. Inside the app (fastest)</h2>
       <ol className="list-decimal pl-5">
         <li><Link className="underline" href="/login">Sign in</Link> to the dashboard.</li>
-        <li>Scroll to <strong>Delete my data</strong> at the bottom of your dashboard.</li>
+        <li>Open <strong>Settings</strong> from the top menu and find <strong>Delete my data</strong> at the bottom.</li>
         <li>Type <code>DELETE</code> and confirm. We delete your connected accounts, access tokens, video statistics and your account.</li>
       </ol>
       <p>To remove only one Facebook Page or Instagram account, press <strong>Disconnect</strong> next to it instead.</p>

@@ -1,4 +1,4 @@
-import { eachDay, inRange, manilaDate, monthStart, previousRange, weekStart, type Range } from "./dates.ts";
+import { daysBetween, eachDay, inRange, manilaDate, monthStart, previousRange, weekStart, type Range } from "./dates.ts";
 
 export type Platform = "facebook" | "instagram";
 
@@ -64,17 +64,24 @@ export type TrendPoint = {
   facebook_reach: number; instagram_reach: number;
 };
 
-export function trend(videos: VideoStat[], range: Range): TrendPoint[] {
-  const byDay = new Map<string, TrendPoint>(
-    eachDay(range).map((date) => [date, { date, facebook_views: 0, instagram_views: 0, facebook_reach: 0, instagram_reach: 0 }]),
+export type TrendBucket = "day" | "week";
+/** Long ranges are grouped by week (Monday start) so the chart doesn't turn into a few lonely spikes. */
+export const trendBucket = (range: Range): TrendBucket => (daysBetween(range.from, range.to) + 1 > 60 ? "week" : "day");
+
+export function trend(videos: VideoStat[], range: Range, bucket: TrendBucket = trendBucket(range)): TrendPoint[] {
+  const keyOf = (date: string) => (bucket === "week" ? weekStart(date) : date);
+  const keys = [...new Set(eachDay(range).map(keyOf))];
+  const byKey = new Map<string, TrendPoint>(
+    keys.map((date) => [date, { date, facebook_views: 0, instagram_views: 0, facebook_reach: 0, instagram_reach: 0 }]),
   );
   for (const v of videos) {
-    const p = byDay.get(manilaDate(new Date(v.published_at)));
+    if (!inRange(v.published_at, range)) continue;
+    const p = byKey.get(keyOf(manilaDate(new Date(v.published_at))));
     if (!p) continue;
     p[`${v.platform}_views`] += v.views;
     p[`${v.platform}_reach`] += v.reach;
   }
-  return [...byDay.values()];
+  return [...byKey.values()];
 }
 
 export type TopWindow = "week" | "month" | "all";
