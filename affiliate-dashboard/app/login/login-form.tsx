@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuthCard, FormMessage } from "@/components/auth/auth-card";
 import { Field } from "@/components/auth/field";
+import { PasswordField } from "@/components/auth/password-field";
 import { CAPTCHA_MESSAGE, isCaptchaError, useCaptcha } from "@/components/auth/turnstile";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
@@ -66,11 +67,11 @@ export function LoginForm({ notice }: { notice?: string }) {
   }
 
   return (
-    <AuthCard title="Sign in" description="Welcome back. Sign in to see how your videos are doing.">
+    <AuthCard title="Welcome back" description="Sign in to see how your videos are doing.">
       <form onSubmit={onSubmit} className="flex flex-col gap-3">
         <Field label="Email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         {mode === "password" && (
-          <Field label="Password" type="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <PasswordField label="Password" autoComplete="current-password" value={password} onChange={setPassword} />
         )}
         {captcha.widget}
         <Button type="submit" disabled={status === "busy" || !captcha.ready}>

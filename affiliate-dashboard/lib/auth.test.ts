@@ -24,3 +24,15 @@ test("validateName", () => {
   assert.ok(validateName("x".repeat(81)));
   assert.equal(validateName(" Maria Santos "), null);
 });
+
+test("passwordStrength", async () => {
+  const { passwordStrength, passwordChecks, isValidEmail } = await import("./auth.ts");
+  assert.equal(passwordStrength("short1").label, "Too short");
+  assert.equal(passwordStrength("password12345").label, "Weak");          // common word
+  assert.equal(passwordStrength("aaaaaaaaaaaa1").label, "Weak");          // repeated characters
+  assert.equal(passwordStrength("blue-River-tractor-92!").score, 4);
+  assert.ok(passwordStrength("maria2026santos").score >= 2);
+  assert.deepEqual(passwordChecks("abcdefghij1").map((c) => c.ok), [true, true, true]);
+  assert.deepEqual(passwordChecks("123").map((c) => c.ok), [false, false, true]);
+  assert.ok(isValidEmail("a@b.co") && !isValidEmail("a@b") && !isValidEmail("a b@c.com"));
+});

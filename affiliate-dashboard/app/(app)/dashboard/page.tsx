@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { ConnectionsCard } from "@/components/connections-card";
 import { AccountsBar } from "@/components/dashboard/accounts-bar";
+import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { Notice } from "@/components/notice";
 import { KpiCards } from "@/components/dashboard/kpi-cards";
 import { PeriodSelector } from "@/components/dashboard/period-selector";
@@ -78,16 +79,20 @@ export default async function DashboardPage({
       )}
 
       {connections.length === 0 ? (
-        <ConnectionsCard connections={connections} />
+        <div className="grid max-w-4xl gap-5 lg:grid-cols-2 lg:items-start">
+          <OnboardingChecklist connected={false} synced={false} />
+          <ConnectionsCard connections={connections} />
+        </div>
       ) : (
         <>
           <AccountsBar connections={connections} />
           {videos.length === 0 ? (
-            <Notice>
-              {synced_ok
-                ? "We haven't found any videos from the last 90 days on your connected accounts yet. Post a video, then press Sync now."
-                : "Your accounts are connected. Press Sync now to load your videos. The first sync can take a minute."}
-            </Notice>
+            <div className="flex max-w-xl flex-col gap-4">
+              <OnboardingChecklist connected synced={synced_ok} />
+              {synced_ok && (
+                <Notice>We haven&apos;t found any videos from the last 90 days on your connected accounts yet. Post a video, then press Sync now.</Notice>
+              )}
+            </div>
           ) : (
             <>
               <p className="text-xs text-muted-foreground">

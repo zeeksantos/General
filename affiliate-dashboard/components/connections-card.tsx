@@ -21,9 +21,9 @@ export function ConnectionsCard({ connections }: { connections: ConnectionRow[] 
   return (
     <Card className="max-w-xl">
       <CardHeader>
-        <CardTitle>Your accounts</CardTitle>
+        <CardTitle>Connect your accounts</CardTitle>
         <CardDescription>
-          Connect your Facebook Page and Instagram professional account to see your top videos.
+          Link the Facebook Page you post on. Its connected Instagram professional account comes with it. We only read your numbers; we never post for you.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">

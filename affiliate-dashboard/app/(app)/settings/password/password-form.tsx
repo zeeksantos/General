@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { FormMessage } from "@/components/auth/auth-card";
-import { Field } from "@/components/auth/field";
+import { PasswordField } from "@/components/auth/password-field";
 import { Button } from "@/components/ui/button";
 import { validatePassword } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/client";
@@ -31,8 +31,8 @@ export function PasswordForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex max-w-sm flex-col gap-3" noValidate>
-      <Field label="New password" type="password" required autoComplete="new-password" hint="At least 10 characters, with a letter and a number." value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Field label="Confirm new password" type="password" required autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+      <PasswordField label="New password" autoComplete="new-password" showMeter value={password} onChange={setPassword} />
+      <PasswordField label="Confirm new password" autoComplete="new-password" value={confirm} onChange={setConfirm} />
       <Button type="submit" className="self-start" disabled={status === "busy"}>{status === "busy" ? "Saving…" : "Save password"}</Button>
       {error && <FormMessage kind="error">{error}</FormMessage>}
       {status === "done" && <FormMessage kind="info">Password updated.</FormMessage>}

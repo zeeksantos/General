@@ -17,6 +17,9 @@ import { createClient } from "./supabase/server";
 export async function loadMyData(userId: string, range: Range) {
   if (DEMO_MODE) {
     const d = demoData();
+    // Demo only: DEMO_EMPTY=true previews a brand-new user; DEMO_EMPTY=connected previews "connected, not synced yet".
+    const empty = process.env.DEMO_EMPTY;
+    if (empty === "true") return { connections: [] as ConnectionRow[], videos: [], igProfileTaps: null };
     const connections: ConnectionRow[] = d.connections
       .filter((c) => c.profile_id === userId)
       .map(({ id, platform, account_name, status, last_synced_at }) => ({ id, platform, account_name, status, last_synced_at }));
@@ -24,6 +27,7 @@ export async function loadMyData(userId: string, range: Range) {
     const igProfileTaps = hasIg
       ? d.taps.filter((t) => t.profile_id === userId && t.date >= range.from && t.date <= range.to).reduce((n, t) => n + t.taps, 0)
       : null;
+    if (empty === "connected") return { connections: connections.map((c) => ({ ...c, last_synced_at: null })), videos: [], igProfileTaps: null };
     return { connections, videos: d.videos.filter((v) => v.profile_id === userId), igProfileTaps };
   }
 
