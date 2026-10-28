@@ -41,3 +41,8 @@ Never commit the key.
 The secret in the URL is the only access control (claude.ai custom connectors can't send custom headers),
 so treat the URL like a password and rotate `MCP_SECRET` if it leaks. `Authorization: Bearer <MCP_SECRET>` also works for other clients.
 Only POST is served; there are no sessions or streaming.
+
+## Deployment notes
+Vercel project `pancake-pos-mcp` (root directory `pancake-pos-mcp`). The repo has no `main`; the Vercel
+production branch is the repo default, so branch pushes build as previews. Vercel Authentication is
+turned off for this project so claude.ai can reach the endpoint; `MCP_SECRET` is the only access control.
