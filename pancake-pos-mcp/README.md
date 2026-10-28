@@ -25,4 +25,19 @@ claude mcp add pancake-pos -e PANCAKE_POS_API_KEY=YOUR_KEY -e PANCAKE_POS_SHOP_I
   "env": { "PANCAKE_POS_API_KEY": "YOUR_KEY", "PANCAKE_POS_SHOP_ID": "YOUR_SHOP_ID" }
 } } }
 ```
-Never commit the key. claude.ai web connectors need a hosted HTTP server, which this does not include yet.
+Never commit the key.
+
+## Hosted on Vercel (for claude.ai)
+`api/mcp.mjs` is a stateless HTTP MCP endpoint; `vercel.json` exposes it at `/mcp/<MCP_SECRET>`.
+
+1. Vercel -> Add New Project -> import this repo, set **Root Directory** to `pancake-pos-mcp`.
+2. Environment variables (mark as Sensitive):
+   - `PANCAKE_POS_API_KEY` - your Pancake key
+   - `MCP_SECRET` - a long random string (32+ chars), e.g. `openssl rand -hex 32`
+   - `PANCAKE_POS_SHOP_ID` - optional default shop
+3. Deploy, then in claude.ai: Settings -> Connectors -> Add custom connector, URL:
+   `https://<your-project>.vercel.app/mcp/<MCP_SECRET>`
+
+The secret in the URL is the only access control (claude.ai custom connectors can't send custom headers),
+so treat the URL like a password and rotate `MCP_SECRET` if it leaks. `Authorization: Bearer <MCP_SECRET>` also works for other clients.
+Only POST is served; there are no sessions or streaming.
